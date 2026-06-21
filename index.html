@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+<title>Stay Gold, Marker</title>
+<meta name="description" content="Correction assistée par IA — The Outsiders, opinion text C3" />
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="Stay Gold" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="theme-color" content="#1F2A37" />
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231F2A37'/%3E%3Ctext x='50' y='66' font-size='52' text-anchor='middle' fill='%23C9A24B' font-family='Georgia,serif'%3ESG%3C/text%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231F2A37'/%3E%3Ctext x='50' y='66' font-size='52' text-anchor='middle' fill='%23C9A24B' font-family='Georgia,serif'%3ESG%3C/text%3E%3C/svg%3E" />
+
+<style>
+  /* Self-hostable fallback stack first; Google Fonts is a progressive enhancement only. */
+  @font-face { font-family: 'GFallback'; src: local('Georgia'); }
+
+  :root {
+    --paper: #FAF6EF;
+    --paper-2: #F1EBDD;
+    --ink: #1F2A37;
+    --ink-soft: #6B6256;
+    --red: #B0413E;
+    --sage: #5C7A5C;
+    --ocre: #C9A24B;
+    --line: #E4DCC8;
+    --font-serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-script: 'Caveat', cursive;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    background: var(--paper);
+    background-image: linear-gradient(var(--line) 1px, transparent 1px);
+    background-size: 100% 32px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  #root { min-height: 100vh; }
+
+  .app-root {
+    padding: calc(18px + env(safe-area-inset-top)) 16px calc(60px + env(safe-area-inset-bottom));
+    max-width: 640px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3 { font-family: var(--font-serif); color: var(--ink); margin: 0; }
+
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; gap: 10px; }
+  .header h1 { font-size: 1.45rem; letter-spacing: -0.01em; }
+  .header .sub { font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+
+  .gear-btn {
+    background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px;
+    width: 38px; height: 38px; flex-shrink: 0; cursor: pointer; font-size: 1.05rem;
+    display: flex; align-items: center; justify-content: center; color: var(--ink);
+  }
+
+  .tabs { display: flex; gap: 6px; background: var(--paper-2); padding: 4px; border-radius: 12px; margin-bottom: 18px; }
+  .tab-btn { flex: 1; border: none; background: transparent; padding: 9px 10px; border-radius: 9px; font-family: var(--font-sans); font-weight: 600; font-size: 0.85rem; color: var(--ink-soft); cursor: pointer; }
+  .tab-btn.active { background: var(--ink); color: var(--paper); }
+
+  .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px; box-shadow: 0 2px 10px rgba(31,42,55,0.04); margin-bottom: 16px; }
+
+  .eyebrow { text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 600; }
+
+  label.field-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 5px; }
+
+  input[type="text"], input[type="password"], textarea, select {
+    width: 100%; font-family: var(--font-sans); font-size: 0.95rem; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: 10px; background: var(--paper-2); color: var(--ink);
+  }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--ink); outline-offset: 1px; }
+  textarea { resize: vertical; min-height: 160px; line-height: 1.5; font-family: var(--font-sans); }
+
+  .name-row { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .name-row > div { flex: 1; min-width: 110px; }
+
+  .mode-toggle { display: flex; gap: 8px; margin-bottom: 14px; }
+  .mode-btn { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--paper-2); font-weight: 600; font-size: 0.85rem; color: var(--ink-soft); cursor: pointer; }
+  .mode-btn.active { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+
+  .dropzone { border: 2px dashed var(--line); border-radius: 14px; padding: 26px 16px; text-align: center; cursor: pointer; color: var(--ink-soft); background: var(--paper-2); }
+  .dropzone:hover { border-color: var(--ink-soft); }
+
+  .thumb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 8px; margin-top: 12px; }
+  .thumb { position: relative; border-radius: 8px; overflow: hidden; border: 1px solid var(--line); aspect-ratio: 3/4; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb .remove { position: absolute; top: 3px; right: 3px; background: rgba(31,42,55,0.75); color: #fff; border: none; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; cursor: pointer; line-height: 1; }
+  .thumb .page-num { position: absolute; bottom: 3px; left: 3px; background: rgba(31,42,55,0.75); color: #fff; border-radius: 5px; font-size: 0.65rem; padding: 1px 5px; }
+
+  .btn-primary { width: 100%; padding: 14px; border-radius: 12px; border: none; background: var(--ink); color: var(--paper); font-weight: 700; font-size: 0.98rem; cursor: pointer; margin-top: 14px; font-family: var(--font-sans); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary { padding: 10px 16px; border-radius: 10px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font-weight: 600; font-size: 0.85rem; cursor: pointer; font-family: var(--font-sans); }
+  .btn-secondary:disabled { opacity: 0.5; cursor: default; }
+
+  .btn-ghost { padding: 10px 16px; border-radius: 10px; border: none; background: transparent; color: var(--ink-soft); font-weight: 600; font-size: 0.85rem; cursor: pointer; text-decoration: underline; font-family: var(--font-sans); }
+
+  .divider { height: 1px; background: var(--line); margin: 16px 0; }
+
+  .pill { display: inline-block; padding: 4px 11px; border-radius: 999px; font-size: 0.8rem; font-weight: 700; font-family: var(--font-sans); white-space: nowrap; }
+
+  .label-sm { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; }
+
+  .justification { font-size: 0.92rem; line-height: 1.55; color: var(--ink); margin: 8px 0 0; }
+  .why-box { margin-top: 10px; display: grid; gap: 6px; }
+  .why-row { display: flex; gap: 8px; font-size: 0.85rem; line-height: 1.45; padding: 8px 10px; border-radius: 9px; }
+  .why-up { background: #FBF3DE; color: #7A5E18; }
+  .why-down { background: #EAF1EA; color: #3D5740; }
+  .why-row .why-icon { flex-shrink: 0; font-weight: 700; }
+
+  .error-chip { background: var(--paper-2); border-radius: 10px; padding: 10px 12px; font-size: 0.9rem; }
+
+  .error-banner { background: #FCEAE9; border: 1px solid var(--red); color: var(--red); padding: 12px; border-radius: 10px; font-size: 0.88rem; margin-top: 12px; }
+  .warn-banner { background: #FBF3DE; border: 1px solid var(--ocre); color: #7A5E18; padding: 12px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 14px; }
+  .info-banner { background: #EAF1EA; border: 1px solid var(--sage); color: #3D5740; padding: 12px; border-radius: 10px; font-size: 0.85rem; margin-bottom: 14px; line-height: 1.5; }
+
+  .loading-wrap { display: flex; align-items: center; gap: 10px; color: var(--ink-soft); font-size: 0.9rem; margin-top: 14px; }
+  .spinner { width: 18px; height: 18px; border: 2.5px solid var(--line); border-top-color: var(--ink); border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .history-row { display: flex; align-items: center; gap: 10px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .icon-btn { background: transparent; border: none; color: var(--ink-soft); font-size: 0.9rem; cursor: pointer; padding: 4px 6px; }
+
+  details summary { cursor: pointer; }
+  details summary::-webkit-details-marker { display: none; }
+
+  .flag-badge { display: inline-flex; align-items: center; gap: 4px; background: #FBF3DE; color: #7A5E18; border-radius: 7px; padding: 2px 8px; font-size: 0.74rem; font-weight: 700; }
+
+  .modal-backdrop { position: fixed; inset: 0; background: rgba(31,42,55,0.55); display: flex; align-items: flex-end; justify-content: center; z-index: 50; }
+  @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
+  .modal { background: var(--paper); width: 100%; max-width: 520px; border-radius: 18px 18px 0 0; padding: 20px; max-height: 88vh; overflow-y: auto; }
+  @media (min-width: 640px) { .modal { border-radius: 18px; } }
+
+  .install-banner { background: var(--ink); color: var(--paper); border-radius: 12px; padding: 12px 14px; font-size: 0.82rem; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .install-banner button { background: var(--ocre); color: var(--ink); border: none; border-radius: 8px; padding: 7px 12px; font-weight: 700; font-size: 0.78rem; cursor: pointer; flex-shrink: 0; }
+
+  .level-chip { font-family: var(--font-serif); font-size: 0.78rem; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink-soft); }
+  .level-chip.active { border: none; color: #FAF6EF; font-weight: 700; }
+
+  .stamp { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; border-width: 3px; border-style: solid; border-radius: 10px; padding: 10px 22px; transform: rotate(-7deg); font-family: var(--font-script); background: rgba(255,255,255,0.4); }
+  .stamp .big { font-size: 2.6rem; line-height: 1; font-weight: 700; }
+  .stamp .small { font-size: 1rem; letter-spacing: 0.04em; margin-top: 2px; }
+
+  .checklist { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+  .checklist li { display: flex; gap: 8px; font-size: 0.92rem; }
+  .check-box { width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0; margin-top: 1px; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 0.7rem; }
+  .check-box.on { background: var(--sage); }
+  .check-box.off { border: 2px solid var(--line); }
+  .check-note { font-size: 0.8rem; color: var(--ink-soft); margin-top: 1px; }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 8px; }
+
+  .hidden { display: none !important; }
+  a { color: var(--ink); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ==========================================================================
+  // Progressive font enhancement (never blocks rendering)
+  // ==========================================================================
+  try {
+    var link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap";
+    link.onerror = function () { /* silently keep system font fallback */ };
+    document.head.appendChild(link);
+  } catch (e) { /* ignore */ }
+
+  // ==========================================================================
+  // Storage: localStorage only (single source of truth, per device/browser)
+  // ==========================================================================
+  var STORAGE_PREFIX = "sg_submission_";
+  var KEY_STORAGE = "sg_anthropic_api_key";
+
+  function listSubmissions() {
+    var items = [];
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k && k.indexOf(STORAGE_PREFIX) === 0) {
+        try {
+          var entry = JSON.parse(localStorage.getItem(k));
+          if (entry) items.push(entry);
+        } catch (e) { /* skip corrupt entry */ }
+      }
+    }
+    items.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+    return items;
+  }
+  function saveSubmission(entry) { localStorage.setItem(STORAGE_PREFIX + entry.id, JSON.stringify(entry)); }
+  function deleteSubmission(id) { localStorage.removeItem(STORAGE_PREFIX + id); }
+  function getApiKey() { return localStorage.getItem(KEY_STORAGE) || ""; }
+  function setApiKey(key) {
+    if (key) localStorage.setItem(KEY_STORAGE, key);
+    else localStorage.removeItem(KEY_STORAGE);
+  }
+
+  // ==========================================================================
+  // Rubric reference data
+  // ==========================================================================
+  var LEVELS_TEXT_FORM = [
+    { code: "A+/A", score: 5 },
+    { code: "B+/B", score: 4 },
+    { code: "C+/C", score: 3 },
+    { code: "D+/D", score: 2 },
+    { code: "E", score: 0 }
+  ];
+  var LEVELS_ACCURACY = [
+    { code: "A+", score: 15 }, { code: "A", score: 14 },
+    { code: "B+", score: 13 }, { code: "B", score: 11 },
+    { code: "C+", score: 10 }, { code: "C", score: 9 },
+    { code: "D+", score: 8 }, { code: "D", score: 6 },
+    { code: "E", score: 3 }
+  ];
+
+  // ==========================================================================
+  // SYSTEM PROMPT
+  // ==========================================================================
+  var SYSTEM_PROMPT = [
+'You are an experienced, fair, and highly consistent Quebec Secondary 3 ESL Core teacher. You are grading final drafts of a short opinion text written for the "The Outsiders" C3 writing task. The prompt students answered was:',
+'',
+'"What is the main message of The Outsiders, and is this message still important today?"',
+'',
+'Required task parameters given to students: 200-250 words; introduction with opinion; two reasons each with one example; a conclusion. Students could use a word bank, dictionary, sentence starters, and a planning sheet.',
+'',
+'IMPORTANT — LANGUAGE: Every piece of text you produce in the JSON output (justifications, comments, notes, strengths, error descriptions, why_not_higher, why_not_lower, teacher_note, etc.) MUST be written entirely in ENGLISH. Do not use any French. This feedback is meant to be shared with the student and must be in English. The only exception is verbatim quotes from the student\'s own writing inside error_examples, which you reproduce exactly as written.',
+'',
+'================================================================',
+'SCOPE — READ CAREFULLY',
+'================================================================',
+'You grade ONLY "Formulation of the message" — i.e., FORM and LANGUAGE, never content quality, never whether the chosen "message" is the right one, never the strength of the argument or the relevance of the opinion. A student who picks a weak or simplistic message but writes a structurally complete, well-formed text in clear English can still score high. A student with a brilliant, nuanced argument riddled with errors and missing a conclusion scores according to the rubric below, not their insight. Do not let content quality leak into your form/language scores in either direction.',
+'',
+'================================================================',
+'PART 1 — TEXT FORM (score: 0, 2, 3, 4, or 5)',
+'================================================================',
+'Required components, each judged as present/well-formed or not:',
+'(a) A meaningful title — not blank, not just "Opinion Text" or "Title:" left as a placeholder; it should relate to the student\'s actual message.',
+'(b) A complete and engaging introduction — presents the film/topic AND states a clear opinion/position. A one-line introduction that only states the opinion with no framing is weaker than one that does both.',
+'(c) Two complete, well-organized body paragraphs, each focused around ONE clear idea (a reason) — note: if a student merges both reasons into a single paragraph with no break, that is a structural issue (one component lacking appropriate structure), not automatically two paragraphs.',
+'(d) A conclusion providing appropriate closure — restates the opinion in a new way; a conclusion that simply repeats the introduction word-for-word is weaker than one that genuinely closes the text.',
+'',
+'Decision procedure:',
+'1. Check each of the 4 components individually: present-and-well-formed, present-but-flawed, or absent.',
+'2. Count how many components are fully absent, and separately note any present-but-flawed components.',
+'3. Apply:',
+'   - 5 (A+/A): all 4 present AND well-formed, AND together they make the text flow well (transitions between parts feel natural, not just mechanically present).',
+'   - 4 (B+/B): all 4 present and appropriate, organizing the text correctly, but fluidity/polish is more ordinary than exceptional.',
+'   - 3 (C+/C): exactly ONE component is either absent OR present-but-poorly-structured.',
+'   - 2 (D+/D): MORE THAN ONE component is absent or poorly structured (e.g., two missing, or one missing + one badly structured).',
+'   - 0 (E): the components present are so broken/unsuitable that the text is confusing, OR the submission isn\'t actually an opinion text (e.g., it\'s a plot summary with no opinion structure, a list, or unrelated content), OR there is no visible paragraph/section structure at all.',
+'4. Choose the "+" sub-level (A+ vs A, B+ vs B, etc.) based on whether execution is closer to the level above or below in spirit — A+ and B+ mean cleanly, confidently at that level; A and B mean solidly but not exceptionally at that level. The numeric score for A+/A is the same (5) and B+/B is the same (4) per the official grid, so the sub-level label is for feedback nuance only and does not change the point value.',
+'',
+'================================================================',
+'PART 2 — ACCURACY & CLARITY (score: 0-5, 6, 8, 9, 10, 11, 13, 14, or 15)',
+'================================================================',
+'Covers: vocabulary accuracy, mechanics (capitalization, punctuation, spelling), grammatical structures, and overall clarity of the message.',
+'',
+'Calibration anchors (use these as a mental ladder, not a checklist):',
+'- A reader who never has to pause = top tier.',
+'- A reader who has to slow down sometimes, but never stops or rereads = still does NOT impede understanding (readability only) → A+/A/B+/B band depending on frequency.',
+'- A reader who has to stop and reread a sentence to get the meaning = understanding IS impeded → C-band or below.',
+'- A reader who has to guess/interpret across MULTIPLE passages to follow the text at all = D-band.',
+'- A reader who, even after multiple rereads, still cannot reconstruct large portions of meaning = E.',
+'',
+'Decision procedure:',
+'1. Read the whole text once for global comprehension. Note your own reading experience: did you ever have to stop and re-read a sentence to understand it (not just to admire it — actually to parse meaning)?',
+'2. Count roughly how often this happened: never/almost never, occasionally (a few isolated spots), repeatedly (many spots, but you could still piece together the overall meaning), or so often that large parts remain unclear even after rereading.',
+'3. Separately ask: does the frequency and severity affect READABILITY only (minor slow-down, you don\'t lose the thread) or does it affect UNDERSTANDING (you actually lose or have to reconstruct meaning)?',
+'4. Map:',
+'   - 14-15 (A/A+): errors present, but you never lost understanding; at most minor readability friction. A+ = nearly error-free or only trivial slips; A = a normal, comfortable amount of error for this proficiency level.',
+'   - 11-13 (B/B+): readability is somewhat affected (you notice the errors, sentence flow is sometimes clunky) but you are never confused about meaning. B+ = closer to flawless readability with occasional bumps; B = readability bumps are more frequent but still never block understanding.',
+'   - 9-10 (C/C+): errors or awkward structures SOMETIMES force you to re-read or interpret to get the meaning, but you ultimately do understand the whole text. C+ = this happens only occasionally; C = it happens somewhat more often.',
+'   - 6-8 (D/D+): errors or awkward structures REPEATEDLY force significant interpretation; you understand the text overall but only by actively reconstructing meaning throughout. D+ = still mostly followable with effort; D = effort is substantial and sustained.',
+'   - 0-5 (E): even after rereading, large parts of the text cannot be reliably understood, OR the text is substantially copied verbatim from a source (the film\'s dialogue, a plot summary text, or another external text) rather than being the student\'s own writing — if you suspect copying, say so in integrity_flag rather than guessing; do not assign E for suspected-but-unconfirmed copying alone.',
+'5. Remember these are Secondary 3 ESL Core (non-native, "regular group," not enriched) students. A normal, expected amount of grammatical imperfection (article errors, occasional subject-verb agreement slips, simple-but-correct sentence structures, direct word-for-word translations from French that are still comprehensible) belongs in the A-band if it does not block understanding. Reserve C/D/E bands for errors that genuinely create comprehension friction, not merely for "not native-like."',
+'',
+'================================================================',
+'STEP-BY-STEP METHOD (do this internally before producing the JSON)',
+'================================================================',
+'1. TRANSCRIBE the full text faithfully from the image(s) (in page order) or use the typed text as given. Mark genuinely illegible words as [illegible] rather than guessing wildly — but make your best reasonable effort first; do not over-flag normal messy handwriting as illegible.',
+'2. COUNT words by counting the transcription (standard word count: whitespace-separated tokens, excluding the title). Report your actual count, not the student\'s own stated count if one is visible — if the two differ notably, mention it in teacher_note.',
+'3. EVALUATE Part 1 (text form) using the decision procedure above.',
+'4. EVALUATE Part 2 (accuracy/clarity) using the decision procedure above, identifying concrete error examples as you go.',
+'5. CHECK integrity: does this look like independent student work for this proficiency level? Flag (don\'t penalize beyond the rubric) if: large fluent passages suddenly differ sharply in sophistication from the rest of the text in a way that suggests external help/translation tools or copying; the text closely mirrors film dialogue or a plot-summary source rather than original opinion writing; or word count is far outside 150-300 (well below suggests incomplete, well above may suggest padding or non-original insertion).',
+'6. COMPUTE total_score = text_form.score + accuracy.score (max 20).',
+'7. WRITE the student-facing comment in simple, warm, encouraging-but-honest English suited to a Secondary 3 ESL learner — one concrete strength, one concrete actionable improvement, no jargon.',
+'8. WRITE the teacher_note: terse, technical, only flag what actually needs a second human look.',
+'',
+'================================================================',
+'OUTPUT CONTRACT',
+'================================================================',
+'Respond ONLY with a single valid JSON object — no markdown fences, no preamble, no text outside the JSON — in exactly this shape:',
+'{',
+'  "transcription": "full transcribed text, paragraph breaks as \\n\\n, illegible spans marked [illegible]",',
+'  "title_found": "the student\'s title, or null if genuinely absent/blank",',
+'  "word_count": integer,',
+'  "word_count_flag": boolean,',
+'  "text_form": {',
+'    "level": "A+/A" | "B+/B" | "C+/C" | "D+/D" | "E",',
+'    "score": integer,',
+'    "components_present": { "title": boolean, "introduction": boolean, "two_body_paragraphs": boolean, "conclusion": boolean },',
+'    "component_notes": { "title": "short note", "introduction": "short note", "two_body_paragraphs": "short note", "conclusion": "short note" },',
+'    "justification": "2-3 sentences explaining the level choice",',
+'    "why_not_higher": "one sentence: what specifically would have been needed to reach the next level up (empty string if already at the top level)",',
+'    "why_not_lower": "one sentence: what the student did right that keeps them above the next level down (empty string if already at the bottom level)"',
+'  },',
+'  "accuracy": {',
+'    "level": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D" | "E",',
+'    "score": integer,',
+'    "justification": "2-3 sentences explaining the level choice, referencing the readability-vs-understanding distinction explicitly",',
+'    "why_not_higher": "one sentence: what specifically would have been needed to reach the next level up (empty string if already at the top level)",',
+'    "why_not_lower": "one sentence: what the student did right that keeps them above the next level down (empty string if already at the bottom level)",',
+'    "error_examples": [ { "original": "exact phrase from student text", "issue": "short error type label", "suggestion": "corrected version", "impedes": "readability" | "understanding" } ],',
+'    "strengths": ["short phrase", "short phrase"]',
+'  },',
+'  "total_score": integer,',
+'  "total_out_of": 20,',
+'  "integrity_flag": { "flagged": boolean, "reason": "empty string if not flagged, else short factual reason" },',
+'  "overall_comment": "3-4 sentences, warm and constructive, for the student",',
+'  "teacher_note": "1-2 terse sentences for the teacher, only if something needs a second look; empty string if nothing notable"',
+'}',
+'',
+'List at most 5 error_examples. Do not include any text outside the JSON object. Double-check before responding that total_score = text_form.score + accuracy.score exactly.'
+  ].join("\n");
+
+  // ==========================================================================
+  // Helpers
+  // ==========================================================================
+  function el(tag, attrs, children) {
+    var node = document.createElement(tag);
+    attrs = attrs || {};
+    for (var k in attrs) {
+      if (k === "class") node.className = attrs[k];
+      else if (k === "style" && typeof attrs[k] === "object") { for (var s in attrs[k]) node.style[s] = attrs[k][s]; }
+      else if (k.indexOf("on") === 0 && typeof attrs[k] === "function") node.addEventListener(k.slice(2).toLowerCase(), attrs[k]);
+      else if (k === "html") node.innerHTML = attrs[k];
+      else node.setAttribute(k, attrs[k]);
+    }
+    children = children || [];
+    children.forEach(function (c) {
+      if (c === null || c === undefined) return;
+      if (typeof c === "string") node.appendChild(document.createTextNode(c));
+      else node.appendChild(c);
+    });
+    return node;
+  }
+  function clear(node) { while (node.firstChild) node.removeChild(node.firstChild); }
+
+  function scoreColor(score, max) {
+    var pct = score / max;
+    if (pct >= 0.8) return "var(--sage)";
+    if (pct >= 0.55) return "var(--ocre)";
+    return "var(--red)";
+  }
+
+  // Compress + resize an image file via canvas before converting to base64.
+  // Keeps handwriting legible while keeping payload size reasonable on mobile.
+  var MAX_DIMENSION = 1800; // px, long edge
+  var JPEG_QUALITY = 0.85;
+
+  function compressImageFile(file) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var objectUrl;
+      try {
+        objectUrl = URL.createObjectURL(file);
+      } catch (e) {
+        reject(e);
+        return;
+      }
+      img.onload = function () {
+        try {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (!w || !h) { URL.revokeObjectURL(objectUrl); reject(new Error("Image dimensions unavailable")); return; }
+          var longEdge = Math.max(w, h);
+          var scale = longEdge > MAX_DIMENSION ? (MAX_DIMENSION / longEdge) : 1;
+          var targetW = Math.round(w * scale);
+          var targetH = Math.round(h * scale);
+
+          var canvas = document.createElement("canvas");
+          canvas.width = targetW;
+          canvas.height = targetH;
+          var ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0, targetW, targetH);
+
+          canvas.toBlob(function (blob) {
+            URL.revokeObjectURL(objectUrl);
+            if (!blob) { reject(new Error("Canvas toBlob failed")); return; }
+            resolve(blob);
+          }, "image/jpeg", JPEG_QUALITY);
+        } catch (e) {
+          URL.revokeObjectURL(objectUrl);
+          reject(e);
+        }
+      };
+      img.onerror = function () {
+        URL.revokeObjectURL(objectUrl);
+        reject(new Error("Failed to load image for compression"));
+      };
+      img.src = objectUrl;
+    });
+  }
+
+  function fileToBase64(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(reader.result.split(",")[1]); };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function csvEscape(val) {
+    if (val === null || val === undefined) return "";
+    var s = String(val).replace(/"/g, '""');
+    return /[",\n]/.test(s) ? ('"' + s + '"') : s;
+  }
+
+  function downloadCSV(history) {
+    var headers = ["Date", "Nom", "Groupe", "Text form (/5)", "Niveau Text form", "Accuracy (/15)", "Niveau Accuracy", "Total (/20)", "Nb mots", "Signalement integrite"];
+    var rows = history.map(function (h) {
+      return [
+        new Date(h.date).toLocaleDateString("fr-CA"),
+        h.studentName || "",
+        h.groupName || "",
+        h.result.text_form.score,
+        h.result.text_form.level,
+        h.result.accuracy.score,
+        h.result.accuracy.level,
+        h.result.total_score,
+        (h.result.word_count !== undefined ? h.result.word_count : h.result.word_count_estimate) || "",
+        h.result.integrity_flag && h.result.integrity_flag.flagged ? ("Oui — " + h.result.integrity_flag.reason) : ""
+      ];
+    });
+    var csv = [headers].concat(rows).map(function (r) { return r.map(csvEscape).join(","); }).join("\n");
+    var blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "the_outsiders_notes_" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function downloadJSON(history) {
+    var payload = {
+      exported_from: "Stay Gold, Marker",
+      exported_at: new Date().toISOString(),
+      count: history.length,
+      submissions: history
+    };
+    var blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "stay_gold_historique_" + new Date().toISOString().slice(0, 10) + ".json";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function importJSONFile(file) {
+    return file.text().then(function (text) {
+      var data = JSON.parse(text);
+      var submissions = Array.isArray(data) ? data : (data.submissions || []);
+      if (!Array.isArray(submissions)) throw new Error("Format de fichier non reconnu.");
+
+      var existingIds = {};
+      listSubmissions().forEach(function (s) { existingIds[s.id] = true; });
+
+      var added = 0, skipped = 0, invalid = 0;
+      submissions.forEach(function (entry) {
+        if (!entry || !entry.id || !entry.result || !entry.date) { invalid++; return; }
+        if (existingIds[entry.id]) { skipped++; return; }
+        saveSubmission(entry);
+        existingIds[entry.id] = true;
+        added++;
+      });
+
+      return { added: added, skipped: skipped, invalid: invalid };
+    });
+  }
+
+  // ==========================================================================
+  // State
+  // ==========================================================================
+  var state = {
+    studentName: "",
+    groupName: "",
+    imageFiles: [], // {base64, mediaType, previewUrl}
+    typedText: "",
+    mode: "photo",
+    loading: false,
+    error: null,
+    result: null,
+    saved: false,
+    history: listSubmissions(),
+    view: "grade",
+    apiKey: getApiKey(),
+    keyModalOpen: false,
+    deferredPrompt: null,
+    showInstallBanner: false,
+    importMessage: null,
+    // Batch mode
+    gradeMode: "single", // "single" | "batch"
+    batchQueue: [],      // [{ id, studentName, groupName, imageFiles:[] }]
+    batchRunning: false,
+    batchProgress: { done: 0, total: 0, currentName: "" },
+    batchResults: [],    // [{ studentName, groupName, ok, score, error }]
+    batchImageFiles: [], // staging area for the copy currently being added
+    batchStudentName: "",
+    batchGroupName: ""
+  };
+
+  var root = document.getElementById("root");
+
+  // ==========================================================================
+  // Render functions (re-render on every state change — simple & robust)
+  // ==========================================================================
+  function render() {
+    clear(root);
+    var appRoot = el("div", { class: "app-root" }, [
+      renderHeader(),
+      state.showInstallBanner ? renderInstallBanner() : null,
+      (!state.apiKey ? renderApiWarning() : null),
+      renderTabs(),
+      state.view === "history" ? renderHistoryView() : renderGradeView(),
+      state.keyModalOpen ? renderApiKeyModal() : null,
+      el("p", { style: { textAlign: "center", fontSize: "0.74rem", color: "var(--ink-soft)", marginTop: "28px" } },
+        ["Grille officielle « Formulation of the message » — C3, ESL Core, Secondaire 3 · /20"])
+    ]);
+    root.appendChild(appRoot);
+  }
+
+  function renderHeader() {
+    return el("div", { class: "header" }, [
+      el("div", {}, [
+        el("h1", {}, ["Stay Gold, Marker"]),
+        el("div", { class: "sub" }, ["Correction C3 — The Outsiders, opinion text"])
+      ]),
+      el("button", {
+        class: "gear-btn", "aria-label": "Réglages",
+        onclick: function () { state.keyModalOpen = true; render(); }
+      }, ["⚙️"])
+    ]);
+  }
+
+  function renderInstallBanner() {
+    return el("div", { class: "install-banner" }, [
+      el("span", {}, ["Installe cette app sur ton écran d'accueil pour un accès rapide."]),
+      el("button", {
+        onclick: function () {
+          if (!state.deferredPrompt) return;
+          state.deferredPrompt.prompt();
+          state.deferredPrompt.userChoice.then(function () {
+            state.deferredPrompt = null;
+            state.showInstallBanner = false;
+            render();
+          });
+        }
+      }, ["Installer"])
+    ]);
+  }
+
+  function renderApiWarning() {
+    return el("div", { class: "warn-banner" }, [
+      "Aucune clé API enregistrée. Touche ⚙️ pour en ajouter une et activer la correction par IA."
+    ]);
+  }
+
+  function renderTabs() {
+    return el("div", { class: "tabs" }, [
+      el("button", {
+        class: "tab-btn" + (state.view === "grade" ? " active" : ""),
+        onclick: function () { state.view = "grade"; render(); }
+      }, ["Corriger"]),
+      el("button", {
+        class: "tab-btn" + (state.view === "history" ? " active" : ""),
+        onclick: function () { state.view = "history"; render(); }
+      }, ["Historique (" + state.history.length + ")"])
+    ]);
+  }
+
+  function renderHistoryView() {
+    var importInput = el("input", {
+      type: "file", accept: "application/json,.json", style: { display: "none" },
+      onchange: function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        importJSONFile(file).then(function (res) {
+          state.history = listSubmissions();
+          var msg = res.added + " copie(s) importée(s)";
+          if (res.skipped > 0) msg += ", " + res.skipped + " déjà présente(s) ignorée(s)";
+          if (res.invalid > 0) msg += ", " + res.invalid + " entrée(s) invalide(s)";
+          state.importMessage = { type: "info", text: msg + "." };
+          render();
+        }).catch(function (err) {
+          state.importMessage = { type: "error", text: "Échec de l'import : fichier JSON invalide ou non reconnu." };
+          render();
+        });
+      }
+    });
+
+    var actionButtons = el("div", { style: { display: "flex", gap: "8px", flexWrap: "wrap" } }, [
+      state.history.length > 0 ? el("button", {
+        class: "btn-secondary",
+        onclick: function () { downloadCSV(state.history); }
+      }, ["⬇ CSV"]) : null,
+      el("button", {
+        class: "btn-secondary",
+        onclick: function () { if (state.history.length > 0) downloadJSON(state.history); }
+      }, ["⬇ JSON"]),
+      el("button", {
+        class: "btn-secondary",
+        onclick: function () { importInput.click(); }
+      }, ["⬆ Importer JSON"]),
+      importInput
+    ]);
+
+    var headerRow = el("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", flexWrap: "wrap", gap: "10px" } }, [
+      el("h2", {}, ["Copies corrigées"]),
+      actionButtons
+    ]);
+
+    var importBanner = null;
+    if (state.importMessage) {
+      importBanner = el("div", {
+        class: state.importMessage.type === "error" ? "error-banner" : "info-banner"
+      }, [state.importMessage.text]);
+    }
+
+    var list;
+    if (state.history.length === 0) {
+      list = el("p", { style: { color: "var(--ink-soft)", fontSize: "0.9rem" } }, ["Aucune copie corrigée pour l'instant."]);
+    } else {
+      list = el("div", { style: { display: "grid", gap: "8px" } },
+        state.history.map(function (it) {
+          var badge = el("div", {
+            class: "pill",
+            style: { background: scoreColor(it.result.total_score, it.result.total_out_of), color: "#FAF6EF", cursor: "pointer" },
+            onclick: function () { selectHistory(it); }
+          }, [it.result.total_score + "/" + it.result.total_out_of]);
+
+          var meta = it.groupName ? ("Gr. " + it.groupName + " · ") : "";
+          meta += new Date(it.date).toLocaleDateString("fr-CA", { day: "numeric", month: "short", year: "numeric" });
+          if (it.result.integrity_flag && it.result.integrity_flag.flagged) meta += " · ⚑";
+
+          var infoBlock = el("div", { style: { flex: "1", minWidth: "0", cursor: "pointer" }, onclick: function () { selectHistory(it); } }, [
+            el("div", { style: { fontWeight: "600", fontFamily: "var(--font-serif)" } }, [it.studentName || "Sans nom"]),
+            el("div", { style: { fontSize: "0.8rem", color: "var(--ink-soft)" } }, [meta])
+          ]);
+
+          var delBtn = el("button", {
+            class: "icon-btn", "aria-label": "Supprimer",
+            onclick: function () {
+              deleteSubmission(it.id);
+              state.history = listSubmissions();
+              render();
+            }
+          }, ["✕"]);
+
+          return el("div", { class: "history-row" }, [infoBlock, badge, delBtn]);
+        })
+      );
+    }
+
+    var children = [headerRow];
+    if (importBanner) children.push(importBanner);
+    children.push(list);
+    return el("div", { class: "card" }, children);
+  }
+
+  function selectHistory(item) {
+    state.result = item.result;
+    state.studentName = item.studentName;
+    state.groupName = item.groupName;
+    state.saved = true;
+    state.view = "grade";
+    state.imageFiles = [];
+    state.typedText = "";
+    render();
+  }
+
+  function renderGradeView() {
+    if (state.result) return renderResultView();
+
+    var modeSwitch = el("div", { class: "tabs", style: { marginBottom: "16px" } }, [
+      el("button", {
+        class: "tab-btn" + (state.gradeMode === "single" ? " active" : ""),
+        onclick: function () { if (!state.batchRunning) { state.gradeMode = "single"; state.error = null; render(); } }
+      }, ["Une copie"]),
+      el("button", {
+        class: "tab-btn" + (state.gradeMode === "batch" ? " active" : ""),
+        onclick: function () { if (!state.batchRunning) { state.gradeMode = "batch"; state.error = null; render(); } }
+      }, ["Plusieurs copies"])
+    ]);
+
+    var body = state.gradeMode === "batch" ? renderBatchView() : renderFormView();
+    return el("div", {}, [modeSwitch, body]);
+  }
+
+  function renderFormView() {
+    var nameRow = el("div", { class: "name-row" }, [
+      el("div", {}, [
+        el("label", { class: "field-label" }, ["Nom de l'élève"]),
+        el("input", {
+          type: "text", value: state.studentName, placeholder: "Ex. Joakim M.-L.",
+          oninput: function (e) { state.studentName = e.target.value; }
+        })
+      ]),
+      el("div", {}, [
+        el("label", { class: "field-label" }, ["Groupe"]),
+        el("input", {
+          type: "text", value: state.groupName, placeholder: "Ex. 303",
+          oninput: function (e) { state.groupName = e.target.value; }
+        })
+      ])
+    ]);
+
+    var modeToggle = el("div", { class: "mode-toggle" }, [
+      el("button", {
+        class: "mode-btn" + (state.mode === "photo" ? " active" : ""),
+        onclick: function () { state.mode = "photo"; render(); }
+      }, ["📷 Photo de la copie"]),
+      el("button", {
+        class: "mode-btn" + (state.mode === "typed" ? " active" : ""),
+        onclick: function () { state.mode = "typed"; render(); }
+      }, ["⌨️ Texte tapé"])
+    ]);
+
+    var modeContent;
+    if (state.mode === "photo") {
+      var fileInput = el("input", {
+        type: "file", accept: "image/*", capture: "environment", multiple: true,
+        style: { display: "none" },
+        onchange: function (e) { handleFiles(e.target.files); }
+      });
+      var dropzone = el("div", {
+        class: "dropzone",
+        onclick: function () { fileInput.click(); }
+      }, [
+        el("div", { style: { fontSize: "1.6rem", marginBottom: "4px" } }, ["＋"]),
+        el("div", { style: { fontWeight: "600", color: "var(--ink)" } }, ["Ajouter une ou plusieurs photos"]),
+        el("div", { style: { fontSize: "0.78rem", marginTop: "2px" } }, ["JPG, PNG — dans l'ordre des pages"]),
+        fileInput
+      ]);
+
+      var thumbs = null;
+      if (state.imageFiles.length > 0) {
+        thumbs = el("div", { class: "thumb-grid" }, state.imageFiles.map(function (img, idx) {
+          return el("div", { class: "thumb" }, [
+            el("img", { src: img.previewUrl, alt: "page " + (idx + 1) }),
+            el("span", { class: "page-num" }, [String(idx + 1)]),
+            el("button", {
+              class: "remove",
+              onclick: function () { state.imageFiles.splice(idx, 1); render(); }
+            }, ["✕"])
+          ]);
+        }));
+      }
+
+      modeContent = el("div", {}, thumbs ? [dropzone, thumbs] : [dropzone]);
+    } else {
+      modeContent = el("div", {}, [
+        el("label", { class: "field-label" }, ["Texte de l'élève"]),
+        el("textarea", {
+          placeholder: "Colle ici le texte final de l'élève...",
+          oninput: function (e) { state.typedText = e.target.value; },
+          html: ""
+        })
+      ]);
+      modeContent.querySelector("textarea").value = state.typedText;
+    }
+
+    var errorBanner = state.error ? el("div", { class: "error-banner" }, [state.error]) : null;
+
+    var actionArea;
+    if (state.loading) {
+      actionArea = el("div", { class: "loading-wrap" }, [
+        el("div", { class: "spinner" }),
+        "Lecture et correction de la copie en cours…"
+      ]);
+    } else {
+      actionArea = el("button", { class: "btn-primary", onclick: handleGrade }, ["Corriger cette copie"]);
+    }
+
+    var children = [nameRow, modeToggle, modeContent];
+    if (errorBanner) children.push(errorBanner);
+    children.push(actionArea);
+
+    return el("div", { class: "card" }, children);
+  }
+
+  function renderBatchView() {
+    // If batch is running or finished, show progress / results instead of the form
+    if (state.batchRunning || state.batchResults.length > 0) {
+      return renderBatchProgress();
+    }
+
+    // Staging form for the copy currently being added
+    var nameRow = el("div", { class: "name-row" }, [
+      el("div", {}, [
+        el("label", { class: "field-label" }, ["Nom de l'élève"]),
+        el("input", {
+          type: "text", value: state.batchStudentName, placeholder: "Ex. Joakim M.-L.",
+          oninput: function (e) { state.batchStudentName = e.target.value; }
+        })
+      ]),
+      el("div", {}, [
+        el("label", { class: "field-label" }, ["Groupe"]),
+        el("input", {
+          type: "text", value: state.batchGroupName, placeholder: "Ex. 303",
+          oninput: function (e) { state.batchGroupName = e.target.value; }
+        })
+      ])
+    ]);
+
+    var fileInput = el("input", {
+      type: "file", accept: "image/*", capture: "environment", multiple: true,
+      style: { display: "none" },
+      onchange: function (e) { handleFiles(e.target.files, state.batchImageFiles); }
+    });
+    var dropzone = el("div", {
+      class: "dropzone",
+      onclick: function () { fileInput.click(); }
+    }, [
+      el("div", { style: { fontSize: "1.6rem", marginBottom: "4px" } }, ["＋"]),
+      el("div", { style: { fontWeight: "600", color: "var(--ink)" } }, ["Photos de CETTE copie"]),
+      el("div", { style: { fontSize: "0.78rem", marginTop: "2px" } }, ["Toutes les pages d'un même élève"]),
+      fileInput
+    ]);
+
+    var thumbs = null;
+    if (state.batchImageFiles.length > 0) {
+      thumbs = el("div", { class: "thumb-grid" }, state.batchImageFiles.map(function (img, idx) {
+        return el("div", { class: "thumb" }, [
+          el("img", { src: img.previewUrl, alt: "page " + (idx + 1) }),
+          el("span", { class: "page-num" }, [String(idx + 1)]),
+          el("button", {
+            class: "remove",
+            onclick: function () { state.batchImageFiles.splice(idx, 1); render(); }
+          }, ["✕"])
+        ]);
+      }));
+    }
+
+    var addBtn = el("button", {
+      class: "btn-secondary",
+      style: { width: "100%", marginTop: "12px", padding: "12px" },
+      onclick: addCopyToBatch
+    }, ["＋ Ajouter cette copie au lot"]);
+
+    var errorBanner = state.error ? el("div", { class: "error-banner" }, [state.error]) : null;
+
+    var stagingChildren = [nameRow, dropzone];
+    if (thumbs) stagingChildren.push(thumbs);
+    if (errorBanner) stagingChildren.push(errorBanner);
+    stagingChildren.push(addBtn);
+
+    var stagingCard = el("div", { class: "card" }, stagingChildren);
+
+    // The queued copies list
+    var queueCard = null;
+    if (state.batchQueue.length > 0) {
+      var queueRows = state.batchQueue.map(function (copy, idx) {
+        return el("div", { class: "history-row" }, [
+          el("div", { style: { flex: "1", minWidth: "0" } }, [
+            el("div", { style: { fontWeight: "600", fontFamily: "var(--font-serif)" } }, [copy.studentName || ("Copie " + (idx + 1))]),
+            el("div", { style: { fontSize: "0.8rem", color: "var(--ink-soft)" } }, [
+              (copy.groupName ? "Gr. " + copy.groupName + " · " : "") + copy.imageFiles.length + " photo(s)"
+            ])
+          ]),
+          el("button", { class: "icon-btn", "aria-label": "Retirer", onclick: function () { removeCopyFromBatch(copy.id); } }, ["✕"])
+        ]);
+      });
+
+      var runBtn = el("button", {
+        class: "btn-primary", style: { marginTop: "14px" },
+        onclick: runBatch
+      }, ["Corriger les " + state.batchQueue.length + " copies"]);
+
+      var warnNote = el("div", { class: "warn-banner", style: { marginTop: "12px", marginBottom: "0" } }, [
+        "⚠ Garde l'app ouverte au premier plan pendant la correction du lot — si tu changes d'application ou verrouilles l'écran, le traitement peut s'arrêter."
+      ]);
+
+      queueCard = el("div", { class: "card" }, [
+        el("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center" } }, [
+          el("h3", { style: { margin: "0" } }, ["Lot : " + state.batchQueue.length + " copie(s)"]),
+          el("button", { class: "btn-ghost", style: { padding: "4px 8px" }, onclick: resetBatch }, ["Vider"])
+        ]),
+        el("div", { style: { display: "grid", gap: "8px", marginTop: "10px" } }, queueRows),
+        warnNote,
+        runBtn
+      ]);
+    }
+
+    return el("div", {}, queueCard ? [stagingCard, queueCard] : [stagingCard]);
+  }
+
+  function renderBatchProgress() {
+    var p = state.batchProgress;
+    var children = [];
+
+    if (state.batchRunning) {
+      var pct = p.total > 0 ? Math.round((p.done / p.total) * 100) : 0;
+      children.push(el("div", { style: { display: "flex", alignItems: "center", gap: "10px", marginBottom: "12px" } }, [
+        el("div", { class: "spinner" }),
+        el("div", {}, [
+          el("div", { style: { fontWeight: "600" } }, ["Correction en cours… " + p.done + " / " + p.total]),
+          p.currentName ? el("div", { style: { fontSize: "0.82rem", color: "var(--ink-soft)" } }, [p.currentName]) : null
+        ])
+      ]));
+      children.push(el("div", { style: { height: "8px", background: "var(--paper-2)", borderRadius: "999px", overflow: "hidden" } }, [
+        el("div", { style: { height: "100%", width: pct + "%", background: "var(--ink)", transition: "width 0.3s" } }, [])
+      ]));
+      children.push(el("div", { class: "warn-banner", style: { marginTop: "12px", marginBottom: "0" } }, [
+        "⚠ Garde l'app au premier plan jusqu'à la fin."
+      ]));
+    } else {
+      // finished
+      var okCount = state.batchResults.filter(function (r) { return r.ok; }).length;
+      var failCount = state.batchResults.length - okCount;
+      children.push(el("h3", { style: { margin: "0 0 4px" } }, ["Lot terminé"]));
+      children.push(el("p", { style: { margin: "0 0 12px", color: "var(--ink-soft)", fontSize: "0.9rem" } }, [
+        okCount + " corrigée(s) et enregistrée(s)" + (failCount > 0 ? ", " + failCount + " en échec" : "") + "."
+      ]));
+    }
+
+    // results list (shown both during and after)
+    if (state.batchResults.length > 0) {
+      var rows = state.batchResults.map(function (r, idx) {
+        var badge;
+        if (r.ok) {
+          badge = el("div", { class: "pill", style: { background: scoreColor(r.score, r.total), color: "#FAF6EF" } }, [r.score + "/" + r.total]);
+        } else {
+          badge = el("div", { class: "pill", style: { background: "var(--red)", color: "#FAF6EF" } }, ["Échec"]);
+        }
+        return el("div", { class: "history-row" }, [
+          el("div", { style: { flex: "1", minWidth: "0" } }, [
+            el("div", { style: { fontWeight: "600", fontFamily: "var(--font-serif)" } }, [r.studentName]),
+            r.ok
+              ? (r.groupName ? el("div", { style: { fontSize: "0.8rem", color: "var(--ink-soft)" } }, ["Gr. " + r.groupName]) : null)
+              : el("div", { style: { fontSize: "0.78rem", color: "var(--red)" } }, [r.error])
+          ]),
+          badge
+        ]);
+      });
+      children.push(el("div", { style: { display: "grid", gap: "8px", marginTop: "8px" } }, rows));
+    }
+
+    if (!state.batchRunning) {
+      children.push(el("button", {
+        class: "btn-primary", style: { marginTop: "14px" },
+        onclick: resetBatch
+      }, ["Nouveau lot"]));
+      children.push(el("button", {
+        class: "btn-ghost", style: { width: "100%", marginTop: "6px" },
+        onclick: function () { state.view = "history"; render(); }
+      }, ["Voir dans l'historique"]));
+    }
+
+    return el("div", { class: "card" }, children);
+  }
+
+  function handleFiles(fileList, targetArray) {
+    state.error = null;
+    var target = targetArray || state.imageFiles;
+    var files = Array.prototype.slice.call(fileList, 0, 6);
+    if (files.length === 0) return;
+
+    var validFiles = files.filter(function (f) { return f.type && f.type.indexOf("image/") === 0; });
+    if (validFiles.length === 0) {
+      state.error = "Le fichier choisi n'est pas reconnu comme une image. Réessaie avec une photo JPG ou PNG.";
+      render();
+      return;
+    }
+
+    var promises = validFiles.map(function (f) {
+      return compressImageFile(f)
+        .catch(function (compressErr) {
+          console.warn("Compression échouée, utilisation de l'image originale:", compressErr);
+          return f; // fall back to original file/blob
+        })
+        .then(function (blobOrFile) {
+          var mediaType = blobOrFile.type || f.type || "image/jpeg";
+          return fileToBase64(blobOrFile).then(function (base64) {
+            var previewUrl;
+            try {
+              previewUrl = URL.createObjectURL(blobOrFile);
+            } catch (e) {
+              previewUrl = "data:" + mediaType + ";base64," + base64;
+            }
+            return { ok: true, base64: base64, mediaType: mediaType, previewUrl: previewUrl, name: f.name };
+          });
+        })
+        .catch(function (err) {
+          console.error("Échec du traitement d'une image:", err);
+          return { ok: false, name: f.name, error: err };
+        });
+    });
+
+    Promise.all(promises).then(function (results) {
+      var added = 0, failed = 0;
+      results.forEach(function (r) {
+        if (r && r.ok) { target.push(r); added++; }
+        else { failed++; }
+      });
+      if (failed > 0 && added === 0) {
+        state.error = "Impossible de charger la photo. Essaie de reprendre la photo, ou choisis-la depuis ta galerie plutôt que l'appareil photo.";
+      } else if (failed > 0) {
+        state.error = failed + " photo(s) n'ont pas pu être chargée(s), les autres ont été ajoutées.";
+      }
+      render();
+    });
+  }
+
+  // Core API call. Returns a Promise resolving to the parsed result object,
+  // or rejecting with an Error whose message is user-friendly (French UI text).
+  function gradeContent(userContent) {
+    return fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": state.apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 2500,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: userContent }]
+      })
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          return response.text().then(function (body) {
+            var detail = "";
+            try {
+              var parsedErr = JSON.parse(body);
+              if (parsedErr && parsedErr.error && parsedErr.error.message) detail = parsedErr.error.message;
+            } catch (e) { detail = body.slice(0, 200); }
+
+            if (response.status === 401) {
+              throw new Error("Clé API refusée (401). Vérifie qu'elle est copiée en entier dans ⚙️, sans espace ni caractère manquant. " + detail);
+            }
+            if (response.status === 400 && detail.toLowerCase().indexOf("credit") !== -1) {
+              throw new Error("Crédit insuffisant. Ajoute du crédit dans Billing sur console.anthropic.com. " + detail);
+            }
+            if (response.status === 400 && detail.toLowerCase().indexOf("model") !== -1) {
+              throw new Error("Modèle non disponible pour ta clé. " + detail);
+            }
+            if (response.status === 429) {
+              throw new Error("Limite de requêtes atteinte (429). Attends une minute et réessaie. " + detail);
+            }
+            throw new Error("Erreur API " + response.status + ". " + (detail || "Aucun détail fourni."));
+          });
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        var textBlock = (data.content || []).find(function (b) { return b.type === "text"; });
+        if (!textBlock) throw new Error("Réponse vide du modèle.");
+        var cleaned = textBlock.text.trim().replace(/^```json/, "").replace(/^```/, "").replace(/```$/, "").trim();
+        var parsed;
+        try {
+          parsed = JSON.parse(cleaned);
+        } catch (e) {
+          throw new Error("La réponse de l'IA n'a pas pu être lue. Réessaie — si ça persiste, la photo est peut-être trop difficile à déchiffrer.");
+        }
+        return parsed;
+      });
+  }
+
+  function friendlyError(e) {
+    var msg = (e && e.message) ? e.message : "";
+    if (msg.indexOf("Failed to fetch") !== -1 || msg.indexOf("NetworkError") !== -1 || msg.indexOf("Load failed") !== -1) {
+      return "Impossible de joindre l'API. Vérifie ta connexion. Si tu es sur un wifi d'école/restreint, il peut bloquer l'accès — essaie en données mobiles.";
+    }
+    return msg || "Une erreur inattendue est survenue. Réessaie.";
+  }
+
+  function buildPhotoContent(imageFiles) {
+    var content = [];
+    imageFiles.forEach(function (img) {
+      content.push({ type: "image", source: { type: "base64", media_type: img.mediaType, data: img.base64 } });
+    });
+    content.push({ type: "text", text: "Here are photo(s) of one student's handwritten final draft (possibly across multiple pages, in order). Transcribe and grade according to the system instructions." });
+    return content;
+  }
+
+  function handleGrade() {
+    state.error = null;
+    state.result = null;
+    state.saved = false;
+
+    if (!state.apiKey) {
+      state.error = "Ajoute ta clé API Anthropic (icône ⚙️ en haut) avant de corriger.";
+      state.keyModalOpen = true;
+      render();
+      return;
+    }
+
+    var userContent;
+    if (state.mode === "photo") {
+      if (state.imageFiles.length === 0) {
+        state.error = "Ajoute au moins une photo de la copie avant de corriger.";
+        render();
+        return;
+      }
+      userContent = buildPhotoContent(state.imageFiles);
+    } else {
+      if (!state.typedText.trim()) {
+        state.error = "Colle le texte de l'élève avant de corriger.";
+        render();
+        return;
+      }
+      userContent = [{ type: "text", text: "Here is the student's typed final draft. Grade according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---" }];
+    }
+
+    state.loading = true;
+    render();
+
+    gradeContent(userContent)
+      .then(function (parsed) { state.result = parsed; })
+      .catch(function (e) { console.error(e); state.error = friendlyError(e); })
+      .finally(function () { state.loading = false; render(); });
+  }
+
+  // ==========================================================================
+  // Batch mode
+  // ==========================================================================
+  function addCopyToBatch() {
+    state.error = null;
+    if (state.batchImageFiles.length === 0) {
+      state.error = "Ajoute au moins une photo pour cette copie avant de l'ajouter au lot.";
+      render();
+      return;
+    }
+    var id = Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    state.batchQueue.push({
+      id: id,
+      studentName: state.batchStudentName.trim(),
+      groupName: state.batchGroupName.trim(),
+      imageFiles: state.batchImageFiles.slice()
+    });
+    // reset staging for next copy
+    state.batchImageFiles = [];
+    state.batchStudentName = "";
+    state.batchGroupName = "";
+    render();
+  }
+
+  function removeCopyFromBatch(id) {
+    state.batchQueue = state.batchQueue.filter(function (c) { return c.id !== id; });
+    render();
+  }
+
+  function runBatch() {
+    state.error = null;
+    if (!state.apiKey) {
+      state.error = "Ajoute ta clé API Anthropic (icône ⚙️ en haut) avant de corriger.";
+      state.keyModalOpen = true;
+      render();
+      return;
+    }
+    if (state.batchQueue.length === 0) {
+      state.error = "Ajoute au moins une copie au lot.";
+      render();
+      return;
+    }
+
+    state.batchRunning = true;
+    state.batchResults = [];
+    state.batchProgress = { done: 0, total: state.batchQueue.length, currentName: "" };
+    render();
+
+    var queue = state.batchQueue.slice();
+
+    function processNext(index) {
+      if (index >= queue.length) {
+        state.batchRunning = false;
+        state.history = listSubmissions();
+        render();
+        return;
+      }
+      var copy = queue[index];
+      state.batchProgress.currentName = copy.studentName || ("Copie " + (index + 1));
+      render();
+
+      gradeContent(buildPhotoContent(copy.imageFiles))
+        .then(function (result) {
+          // auto-save to history
+          var entry = {
+            id: copy.id,
+            studentName: copy.studentName,
+            groupName: copy.groupName,
+            date: new Date().toISOString(),
+            result: result
+          };
+          saveSubmission(entry);
+          state.batchResults.push({
+            studentName: copy.studentName || ("Copie " + (index + 1)),
+            groupName: copy.groupName,
+            ok: true,
+            score: result.total_score,
+            total: result.total_out_of
+          });
+        })
+        .catch(function (e) {
+          console.error(e);
+          state.batchResults.push({
+            studentName: copy.studentName || ("Copie " + (index + 1)),
+            groupName: copy.groupName,
+            ok: false,
+            error: friendlyError(e)
+          });
+        })
+        .finally(function () {
+          state.batchProgress.done = index + 1;
+          render();
+          // small delay between calls to be gentle on rate limits
+          setTimeout(function () { processNext(index + 1); }, 600);
+        });
+    }
+
+    processNext(0);
+  }
+
+  function resetBatch() {
+    state.batchQueue = [];
+    state.batchResults = [];
+    state.batchRunning = false;
+    state.batchProgress = { done: 0, total: 0, currentName: "" };
+    state.batchImageFiles = [];
+    state.batchStudentName = "";
+    state.batchGroupName = "";
+    state.error = null;
+    render();
+  }
+
+  function renderResultView() {
+    var r = state.result;
+    var wordCount = (r.word_count !== undefined ? r.word_count : r.word_count_estimate);
+
+    var headerLeft = el("div", {}, [
+      el("div", { class: "eyebrow" }, ["Résultat"]),
+      el("h2", { style: { margin: "2px 0 4px" } }, [state.studentName || "Élève sans nom"]),
+      state.groupName ? el("p", { style: { margin: "0", fontSize: "0.82rem", color: "var(--ink-soft)" } }, ["Groupe " + state.groupName]) : null,
+      r.title_found ? el("p", { style: { margin: "4px 0 0", color: "var(--ink-soft)", fontStyle: "italic" } }, ["« " + r.title_found + " »"]) : null,
+      el("p", { style: { margin: "4px 0 0", fontSize: "0.85rem", color: "var(--ink-soft)" } }, [
+        wordCount + " mots",
+        r.word_count_flag ? el("span", { style: { color: "var(--ocre)", fontWeight: "700" } }, [" ⚠ hors de 150–300"]) : null
+      ]),
+      (r.integrity_flag && r.integrity_flag.flagged) ? el("div", { class: "flag-badge", style: { marginTop: "6px" } }, ["⚑ À vérifier : " + r.integrity_flag.reason]) : null
+    ]);
+
+    var color = scoreColor(r.total_score, r.total_out_of);
+    var stamp = el("div", { class: "stamp", style: { borderColor: color, color: color } }, [
+      el("span", { class: "big" }, [r.total_score + "/" + r.total_out_of]),
+      el("span", { class: "small" }, ["Formulation"])
+    ]);
+
+    var headerSection = el("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px" } }, [headerLeft, stamp]);
+
+    var textFormSection = renderTextFormSection(r.text_form);
+    var accuracySection = renderAccuracySection(r.accuracy);
+
+    var commentSection = el("section", {}, [
+      el("h3", { style: { margin: "0 0 6px" } }, ["Commentaire pour l'élève"]),
+      el("p", { class: "justification", style: { background: "var(--paper-2)", padding: "12px", borderRadius: "10px" } }, [r.overall_comment])
+    ]);
+
+    var teacherNote = r.teacher_note ? el("section", { style: { marginTop: "10px" } }, [
+      el("span", { class: "label-sm", style: { color: "var(--ink-soft)" } }, ["Note pour l'enseignant·e"]),
+      el("p", { style: { fontSize: "0.88rem", color: "var(--ink-soft)", margin: "4px 0 0" } }, [r.teacher_note])
+    ]) : null;
+
+    var transcriptionDetails = el("details", { style: { marginTop: "14px" } }, [
+      el("summary", { style: { color: "var(--ink-soft)", fontSize: "0.85rem" } }, ["Voir la transcription complète"]),
+      el("p", { style: { whiteSpace: "pre-wrap", fontFamily: "var(--font-serif)", fontSize: "0.92rem", marginTop: "8px", lineHeight: "1.6" } }, [r.transcription])
+    ]);
+
+    var saveBtn = el("button", {
+      class: "btn-secondary",
+      disabled: state.saved,
+      onclick: function () {
+        if (state.saved) return;
+        var id = Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+        var entry = { id: id, studentName: state.studentName.trim(), groupName: state.groupName.trim(), date: new Date().toISOString(), result: r };
+        saveSubmission(entry);
+        state.history = listSubmissions();
+        state.saved = true;
+        render();
+      }
+    }, [state.saved ? "✓ Enregistré dans l'historique" : "Enregistrer dans l'historique"]);
+
+    var resultCard = el("div", { class: "card result-card" }, [
+      headerSection, el("div", { class: "divider" }),
+      textFormSection, el("div", { class: "divider" }),
+      accuracySection, el("div", { class: "divider" }),
+      commentSection, teacherNote, transcriptionDetails,
+      el("div", { style: { marginTop: "16px", display: "flex", gap: "10px" } }, [saveBtn])
+    ]);
+
+    var newCopyBtn = el("button", {
+      class: "btn-ghost",
+      onclick: function () {
+        state.result = null; state.saved = false; state.imageFiles = []; state.typedText = "";
+        state.studentName = ""; state.groupName = ""; state.error = null;
+        render();
+      }
+    }, ["← Corriger une nouvelle copie"]);
+
+    return el("div", {}, [resultCard, newCopyBtn]);
+  }
+
+  function renderLevelRow(levels, current, max) {
+    return el("div", { style: { display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "8px" } },
+      levels.map(function (l) {
+        var active = l.code === current;
+        return el("div", {
+          class: "level-chip" + (active ? " active" : ""),
+          style: active ? { background: scoreColor(l.score, max) } : {}
+        }, [l.code + " · " + l.score]);
+      })
+    );
+  }
+
+  function renderWhyBox(item) {
+    var rows = [];
+    if (item.why_not_higher && item.why_not_higher.trim()) {
+      rows.push(el("div", { class: "why-row why-up" }, [
+        el("span", { class: "why-icon" }, ["↑"]),
+        el("span", {}, ["Pour monter d'un niveau : " + item.why_not_higher])
+      ]));
+    }
+    if (item.why_not_lower && item.why_not_lower.trim()) {
+      rows.push(el("div", { class: "why-row why-down" }, [
+        el("span", { class: "why-icon" }, ["✓"]),
+        el("span", {}, ["Ce qui maintient ce niveau : " + item.why_not_lower])
+      ]));
+    }
+    if (rows.length === 0) return null;
+    return el("div", { class: "why-box" }, rows);
+  }
+
+  function renderTextFormSection(tf) {
+    var headerRow = el("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between" } }, [
+      el("h3", {}, ["1. Text form"]),
+      el("span", { class: "pill", style: { background: scoreColor(tf.score, 5), color: "#FAF6EF" } }, [tf.level + " — " + tf.score + "/5"])
+    ]);
+
+    var compMap = [
+      ["title", "Meaningful title"],
+      ["introduction", "Complete & engaging introduction"],
+      ["two_body_paragraphs", "Two well-organized body paragraphs"],
+      ["conclusion", "Conclusion with closure"]
+    ];
+    var checklist = el("ul", { class: "checklist" }, compMap.map(function (pair) {
+      var key = pair[0], label = pair[1];
+      var present = tf.components_present ? tf.components_present[key] : false;
+      var note = tf.component_notes ? tf.component_notes[key] : null;
+      return el("li", {}, [
+        el("span", { class: "check-box " + (present ? "on" : "off") }, [present ? "✓" : ""]),
+        el("div", {}, [
+          el("span", { style: { color: present ? "var(--ink)" : "var(--ink-soft)" } }, [label]),
+          note ? el("div", { class: "check-note" }, [note]) : null
+        ])
+      ]);
+    }));
+
+    return el("section", {}, [
+      headerRow,
+      el("p", { class: "justification" }, [tf.justification]),
+      checklist,
+      renderWhyBox(tf),
+      renderLevelRow(LEVELS_TEXT_FORM, tf.level, 5)
+    ]);
+  }
+
+  function renderAccuracySection(acc) {
+    var headerRow = el("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between" } }, [
+      el("h3", {}, ["2. Accuracy & clarity"]),
+      el("span", { class: "pill", style: { background: scoreColor(acc.score, 15), color: "#FAF6EF" } }, [acc.level + " — " + acc.score + "/15"])
+    ]);
+
+    var strengths = (acc.strengths && acc.strengths.length > 0) ? el("div", { style: { marginTop: "10px" } }, [
+      el("span", { class: "label-sm", style: { color: "var(--sage)" } }, ["Points forts"]),
+      el("ul", { style: { margin: "4px 0 0", paddingLeft: "18px" } }, acc.strengths.map(function (s) {
+        return el("li", { style: { fontSize: "0.92rem" } }, [s]);
+      }))
+    ]) : null;
+
+    var errors = (acc.error_examples && acc.error_examples.length > 0) ? el("div", { style: { marginTop: "12px" } }, [
+      el("span", { class: "label-sm", style: { color: "var(--red)" } }, ["Exemples d'erreurs relevées"]),
+      el("div", { style: { display: "grid", gap: "8px", marginTop: "6px" } }, acc.error_examples.map(function (e) {
+        var impedesText = e.impedes ? (" · affecte " + (e.impedes === "understanding" ? "la compréhension" : "la lisibilité")) : "";
+        return el("div", { class: "error-chip" }, [
+          el("div", { style: { textDecoration: "line-through", color: "var(--red)", fontFamily: "var(--font-serif)" } }, [e.original]),
+          el("div", { style: { fontSize: "0.82rem", color: "var(--ink-soft)", marginTop: "2px" } }, [e.issue + impedesText]),
+          el("div", { style: { fontSize: "0.9rem", color: "var(--sage)", marginTop: "2px" } }, ["→ " + e.suggestion])
+        ]);
+      }))
+    ]) : null;
+
+    return el("section", {}, [
+      headerRow,
+      el("p", { class: "justification" }, [acc.justification]),
+      renderWhyBox(acc),
+      strengths, errors,
+      renderLevelRow(LEVELS_ACCURACY, acc.level, 15)
+    ]);
+  }
+
+  function renderApiKeyModal() {
+    var inputEl = el("input", { type: "password", placeholder: "sk-ant-api03-...", autocomplete: "off", value: state.apiKey });
+    inputEl.value = state.apiKey;
+
+    var statusLine = el("div", { style: { marginTop: "10px", minHeight: "20px", fontSize: "0.85rem" } }, []);
+
+    function setStatus(text, kind) {
+      clear(statusLine);
+      var color = kind === "ok" ? "var(--sage)" : (kind === "err" ? "var(--red)" : "var(--ink-soft)");
+      statusLine.appendChild(el("span", { style: { color: color } }, [text]));
+    }
+
+    function testKey() {
+      var val = inputEl.value.trim();
+      if (!val) { setStatus("Entre d'abord une clé.", "err"); return; }
+      setStatus("Test en cours…", "info");
+      fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": val,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({ model: "claude-sonnet-4-6", max_tokens: 8, messages: [{ role: "user", content: "ping" }] })
+      }).then(function (resp) {
+        if (resp.ok) { setStatus("✓ La clé fonctionne ! Tu peux l'enregistrer.", "ok"); return; }
+        return resp.text().then(function (body) {
+          var detail = "";
+          try { var p = JSON.parse(body); if (p && p.error && p.error.message) detail = p.error.message; } catch (e) { detail = body.slice(0, 120); }
+          if (resp.status === 401) setStatus("✗ Clé refusée (401). Recopie-la en entier, sans espace.", "err");
+          else if (resp.status === 400 && detail.toLowerCase().indexOf("credit") !== -1) setStatus("✗ Pas de crédit. Ajoute du crédit dans Billing.", "err");
+          else setStatus("✗ Erreur " + resp.status + " : " + detail, "err");
+        });
+      }).catch(function (e) {
+        var m = (e && e.message) || "";
+        if (m.indexOf("Failed to fetch") !== -1 || m.indexOf("Load failed") !== -1) setStatus("✗ Impossible de joindre l'API. Vérifie ta connexion (essaie en données mobiles si wifi restreint).", "err");
+        else setStatus("✗ " + m, "err");
+      });
+    }
+
+    var backdrop = el("div", {
+      class: "modal-backdrop",
+      onclick: function (e) { if (e.target === backdrop) { state.keyModalOpen = false; render(); } }
+    });
+
+    var deleteBtn = state.apiKey ? el("button", {
+      class: "btn-ghost", style: { marginTop: "10px" },
+      onclick: function () {
+        setApiKey("");
+        state.apiKey = "";
+        state.keyModalOpen = false;
+        render();
+      }
+    }, ["Supprimer la clé enregistrée"]) : null;
+
+    var modal = el("div", { class: "modal" }, [
+      el("h2", { style: { marginTop: "0" } }, ["Clé API Anthropic"]),
+      el("p", { style: { fontSize: "0.88rem", color: "var(--ink-soft)", lineHeight: "1.5" } }, [
+        "Crée une clé sur ",
+        el("a", { href: "https://console.anthropic.com", target: "_blank", rel: "noopener noreferrer" }, ["console.anthropic.com"]),
+        " → Billing (ajoute un mode de paiement) → API Keys → Create Key. Elle est stockée seulement sur cet appareil — jamais envoyée ailleurs qu'à l'API Anthropic."
+      ]),
+      el("label", { class: "field-label" }, ["Clé API (commence par sk-ant-...)"]),
+      inputEl,
+      statusLine,
+      el("div", { style: { display: "flex", gap: "10px", marginTop: "12px", flexWrap: "wrap" } }, [
+        el("button", { class: "btn-secondary", onclick: testKey }, ["Tester la clé"]),
+        el("button", { class: "btn-secondary", onclick: function () { state.keyModalOpen = false; render(); } }, ["Annuler"]),
+        el("button", {
+          class: "btn-primary", style: { margin: "0", flex: "1", minWidth: "120px" },
+          onclick: function () {
+            var val = inputEl.value.trim();
+            setApiKey(val);
+            state.apiKey = val;
+            state.keyModalOpen = false;
+            state.error = null;
+            render();
+          }
+        }, ["Enregistrer"])
+      ]),
+      deleteBtn
+    ]);
+
+    backdrop.appendChild(modal);
+    return backdrop;
+  }
+
+  // ==========================================================================
+  // PWA install prompt
+  // ==========================================================================
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    state.deferredPrompt = e;
+    state.showInstallBanner = true;
+    render();
+  });
+
+  // ==========================================================================
+  // Init
+  // ==========================================================================
+  render();
+})();
+</script>
+</body>
+</html>
