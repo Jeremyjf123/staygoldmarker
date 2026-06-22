@@ -133,6 +133,9 @@
   .project-switcher { display: flex; gap: 8px; margin-bottom: 14px; }
   .project-btn { flex: 1; padding: 10px 8px; border-radius: 12px; border: 1.5px solid var(--line); background: var(--paper-2); color: var(--ink-soft); font-weight: 700; font-size: 0.9rem; font-family: var(--font-sans); cursor: pointer; }
   .project-btn.active { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+  .subtab-switcher { display: flex; gap: 6px; margin-bottom: 14px; }
+  .subtab-btn { flex: 1; padding: 8px 6px; border-radius: 10px; border: 1.5px solid var(--line); background: var(--paper); color: var(--ink-soft); font-weight: 600; font-size: 0.82rem; font-family: var(--font-sans); cursor: pointer; }
+  .subtab-btn.active { background: var(--sage); color: #FAF6EF; border-color: var(--sage); }
 
   .error-banner { background: #FCEAE9; border: 1px solid var(--red); color: var(--red); padding: 12px; border-radius: 10px; font-size: 0.88rem; margin-top: 12px; }
   .warn-banner { background: #FBF3DE; border: 1px solid var(--ocre); color: #7A5E18; padding: 12px; border-radius: 10px; font-size: 0.88rem; margin-bottom: 14px; }
@@ -203,7 +206,7 @@
   var STORAGE_PREFIX = "sg_submission_";
   var KEY_STORAGE = "sg_anthropic_api_key";
 
-  function listSubmissions(project) {
+  function listSubmissions(project, task) {
     var items = [];
     for (var i = 0; i < localStorage.length; i++) {
       var k = localStorage.key(i);
@@ -213,13 +216,27 @@
           if (entry) {
             // Legacy entries (no project field) are Outsiders copies.
             var entryProject = entry.project || "outsiders";
-            if (!project || entryProject === project) items.push(entry);
+            if (project && entryProject !== project) continue;
+            // Within the Animals project, separate the two sub-tasks.
+            // Legacy animals entries (no task field) are "reading" (the original C2 notes).
+            if (project === "animals" && task) {
+              var entryTask = entry.task || "reading";
+              if (entryTask !== task) continue;
+            }
+            items.push(entry);
           }
         } catch (e) { /* skip corrupt entry */ }
       }
     }
     items.sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
     return items;
+  }
+
+  // History for the currently-active project + (if animals) sub-task.
+  function currentHistory() {
+    return (state.project === "animals")
+      ? listSubmissions("animals", state.animalsTask)
+      : listSubmissions("outsiders");
   }
   function saveSubmission(entry) { localStorage.setItem(STORAGE_PREFIX + entry.id, JSON.stringify(entry)); }
   function deleteSubmission(id) { localStorage.removeItem(STORAGE_PREFIX + id); }
@@ -480,6 +497,143 @@
 '',
 'Respond ONLY with one valid JSON object in the EXACT same shape as before. No markdown, no preamble, no text outside the JSON.'
   ].join("\n");
+
+  // ==========================================================================
+  // ANIMALS & US — C3 SYSTEM PROMPT (Task 5 final article)
+  // ==========================================================================
+  var ANIMALS_WRITING_SYSTEM_PROMPT = [
+'You are an experienced, fair, and highly consistent Quebec Secondary 3 ESL Core teacher. You are grading final drafts of the "Animals and Us" TASK 5 reinvestment article. A teenage magazine invited the student to contribute to a special edition on animals. The task given to students was:',
+'',
+'"Using information from the texts in the Reading Booklet, write an article to inform other teenagers about the positive and negative impacts of human behaviour on animals."',
+'',
+'REQUIRED ARTICLE COMPONENTS (given to students):',
+'- a meaningful title;',
+'- an introduction that presents the subject (the impact of human behaviour on animals);',
+'- a body paragraph about the POSITIVE impact of certain human actions on animals (at least two examples);',
+'- a body paragraph about the NEGATIVE impact of certain human actions on animals (at least two examples);',
+'- a conclusion with a piece of advice or a message to the readers.',
+'Students were told to write in their own words. There is no strict word count, but a complete article of this kind is typically about 150-300 words.',
+'',
+'IMPORTANT — LANGUAGE: Every piece of text you produce in the JSON output (justifications, comments, notes, strengths, error descriptions, why_not_higher, why_not_lower, teacher_note, etc.) MUST be written entirely in ENGLISH. The only exception is verbatim quotes from the student\'s own writing inside error_examples.',
+'',
+'================================================================',
+'SCOPE — READ CAREFULLY (this task is graded on C3 ONLY)',
+'================================================================',
+'You grade ONLY C3 "Formulation of the message" — i.e., FORM and LANGUAGE. You do NOT grade C2 here (the accuracy/pertinence of the animal facts is graded separately). Do not lower the score because a fact about animals is wrong or thin; that is a C2 concern. Judge: is the article well-structured (the 5 components), and is the language clear and accurate? A student with shaky content but a clean, complete, well-written article still scores high on C3.',
+'',
+'================================================================',
+'PART 1 — TEXT FORM (score: 0, 2, 3, 4, or 5)',
+'================================================================',
+'Required components, each judged present/well-formed or not:',
+'(a) A meaningful title — not blank, not a placeholder; relates to the article\'s subject (humans\' impact on animals).',
+'(b) A complete and engaging introduction — presents the subject (the impact of human behaviour on animals), not just a single bald sentence.',
+'(c) A body paragraph on POSITIVE impacts with at least two examples — judged as a structural component: is there a distinct paragraph dedicated to positive impacts, and does it give at least two examples? If positive and negative impacts are merged into one undifferentiated block, that is a structural problem.',
+'(d) A body paragraph on NEGATIVE impacts with at least two examples — same idea, a distinct paragraph with at least two examples.',
+'(e) A conclusion with a piece of advice or a message to readers — not just stopping; it should close with a takeaway/message.',
+'',
+'NOTE: This task has FIVE structural components (title, intro, positive paragraph, negative paragraph, conclusion), not four. Treat the two body paragraphs (positive / negative) as the "two complete, well-organized body paragraphs" of the C3 grid. A missing "at least two examples" in a body paragraph makes that component present-but-flawed.',
+'',
+'Decision procedure:',
+'1. Check each of the 5 components: present-and-well-formed, present-but-flawed, or absent.',
+'2. Count absent components and note flawed ones.',
+'3. Apply the C3 Text form grid:',
+'   - 5 (A+/A): all components present AND well-formed AND the article flows well (natural transitions).',
+'   - 4 (B+/B): all components present and appropriate to organize the article, but fluidity is ordinary rather than polished.',
+'   - 3 (C+/C): exactly ONE component is absent OR present-but-poorly-structured (e.g., a body paragraph with only one example, or positive/negative not clearly separated).',
+'   - 2 (D+/D): MORE THAN ONE component absent or poorly structured.',
+'   - 0 (E): components so broken the article is confusing, OR it is not an article (e.g., it is the notes chart, a list, or unrelated), OR no visible structure.',
+'4. The "+" sub-level is for feedback nuance only; A+/A both = 5 and B+/B both = 4 per the official grid.',
+'',
+'================================================================',
+'PART 2 — ACCURACY & CLARITY (score: 0-5, 6, 8, 9, 10, 11, 13, 14, or 15)',
+'================================================================',
+'Covers vocabulary accuracy, mechanics (capitalization, punctuation, spelling), grammatical structures, and clarity of the message. Use the readability-vs-understanding ladder:',
+'- A reader who never has to pause = top tier.',
+'- Has to slow down sometimes but never stops/rereads = readability only, not understanding → A/B band by frequency.',
+'- Has to stop and reread a sentence to get meaning = understanding impeded → C band or below.',
+'- Has to guess/interpret across MULTIPLE passages = D band.',
+'- Cannot reconstruct large portions even after rereading = E.',
+'',
+'Map:',
+'   - 14-15 (A/A+): errors present but understanding never lost; minor readability friction at most.',
+'   - 11-13 (B/B+): readability noticeably affected, but meaning never in doubt.',
+'   - 9-10 (C/C+): errors SOMETIMES force rereading/interpretation, but the whole text is ultimately understood.',
+'   - 6-8 (D/D+): errors REPEATEDLY force significant interpretation; understood only by active reconstruction.',
+'   - 0-5 (E): large parts unreadable even after rereading, OR the article is substantially copied verbatim/patchwritten from the Reading Booklet rather than the student\'s own words (flag in integrity_flag rather than guessing on suspicion alone).',
+'',
+'Remember these are Secondary 3 ESL Core (non-native, regular-stream) students writing by hand in one period. A normal amount of imperfection (article errors, occasional agreement slips, simple-but-correct structures, comprehensible French-influenced phrasings) belongs in the A-band if it does not block understanding. Reserve C/D/E for errors that genuinely create comprehension friction.',
+'',
+'NOTE ON COPYING: This task explicitly requires students to write "in their own words." If you see sentences lifted directly from the Reading Booklet (verbatim or lightly patchwritten), that legitimately affects C3 — heavy copying caps the accuracy score (E band says "Most passages are copied from the source texts"). Flag it in integrity_flag and reflect genuine, extensive copying in the accuracy level. A few borrowed phrases are normal and not heavily penalized.',
+'',
+'GENERAL GRADING STANCE — slightly lenient: on a genuine borderline between two levels, choose the HIGHER one. Reward clear effort and communication over polish; do not invent merit, do not ignore repeated real errors, but lean kind on close calls. Apply equally to Text form and Accuracy.',
+'',
+'================================================================',
+'STEP-BY-STEP METHOD (internal, before the JSON)',
+'================================================================',
+'1. TRANSCRIBE faithfully from the image(s) in page order. Handwriting from 14-15 year-old ESL students: expect messy letters, crossed-out words, margin insertions, spelling errors. Read patiently; always make your best guess. FAIRNESS: (a) a word hard to read because of PHOTO/handwriting → best guess in <<double angle brackets>>, add to uncertain_words, do NOT count as a spelling error; (b) a clearly-legible word the STUDENT misspelled → transcribe as written and DO count it. Use [illegible] only as a last resort. Preserve the student\'s spelling/grammar elsewhere.',
+'2. COUNT words from the transcription (whitespace tokens, excluding the title).',
+'3. EVALUATE Part 1 (text form) with the 5-component procedure.',
+'4. EVALUATE Part 2 (accuracy/clarity); collect concrete error examples. Never count your own transcription uncertainty as a student error.',
+'5. CHECK integrity: does it look like independent, own-words student work? Flag (don\'t over-penalize) sudden fluency jumps suggesting external tools, or close mirroring of Reading Booklet passages.',
+'6. COMPUTE total_score = text_form.score + accuracy.score (max 20).',
+'7. WRITE the student-facing comment in simple, warm, honest English: one concrete strength, one concrete improvement.',
+'8. WRITE the teacher_note: terse, only what needs a human second look.',
+'',
+'================================================================',
+'OUTPUT CONTRACT — respond ONLY with one valid JSON object (no markdown, no preamble):',
+'================================================================',
+'{',
+'  "transcription": "full transcribed article, paragraph breaks as \\n\\n. Guessed words wrapped in <<word>>. [illegible] only as last resort.",',
+'  "title_found": "the student\'s title, or null if genuinely absent/blank",',
+'  "student_name_on_sheet": "the student\'s name if written on the page, cleaned and properly capitalized, or null if none visible",',
+'  "word_count": integer,',
+'  "word_count_flag": boolean,',
+'  "uncertain_words": [ { "guess": "best-guess reading", "context": "3-6 surrounding words", "reason": "why uncertain" } ],',
+'  "text_form": {',
+'    "level": "A+/A" | "B+/B" | "C+/C" | "D+/D" | "E",',
+'    "score": integer,',
+'    "components_present": { "title": boolean, "introduction": boolean, "positive_paragraph": boolean, "negative_paragraph": boolean, "conclusion": boolean },',
+'    "component_notes": { "title": "short note", "introduction": "short note", "positive_paragraph": "short note incl. whether >=2 examples", "negative_paragraph": "short note incl. whether >=2 examples", "conclusion": "short note incl. whether it gives advice/message" },',
+'    "justification": "2-3 sentences explaining the level choice",',
+'    "why_not_higher": "one sentence (empty if top level)",',
+'    "why_not_lower": "one sentence (empty if bottom level)"',
+'  },',
+'  "accuracy": {',
+'    "level": "A+" | "A" | "B+" | "B" | "C+" | "C" | "D+" | "D" | "E",',
+'    "score": integer,',
+'    "justification": "2-3 sentences, referencing readability-vs-understanding",',
+'    "why_not_higher": "one sentence (empty if top level)",',
+'    "why_not_lower": "one sentence (empty if bottom level)",',
+'    "error_examples": [ { "original": "exact phrase from student text", "issue": "short label", "suggestion": "corrected version", "impedes": "readability" | "understanding" } ],',
+'    "strengths": ["short phrase", "short phrase"]',
+'  },',
+'  "total_score": integer,',
+'  "total_out_of": 20,',
+'  "integrity_flag": { "flagged": boolean, "reason": "empty if not flagged, else short factual reason (e.g. copied passages from Reading Booklet)" },',
+'  "overall_comment": "3-4 sentences, warm and constructive, for the student",',
+'  "teacher_note": "1-2 terse sentences for the teacher, only if something needs a second look; empty otherwise"',
+'}',
+'',
+'List at most 5 error_examples. No text outside the JSON. Double-check total_score = text_form.score + accuracy.score.'
+  ].join("\n");
+
+  var ANIMALS_WRITING_RECHECK_PROMPT = [
+'You previously graded a Quebec Secondary 3 ESL Core student\'s "Animals and Us" TASK 5 article (C3 competency) from a photo. Some words were hard to read, so you guessed them and listed them as uncertain. The teacher has now read the original paper and is telling you what the student ACTUALLY wrote for those words.',
+'',
+'You will receive: (1) your previous transcription (with guesses), (2) the teacher\'s corrections, and (3) your previous full evaluation JSON.',
+'',
+'Produce an UPDATED evaluation with the SAME C3 rubric and the SAME JSON shape as before. Rules:',
+'- Replace each uncertain word with exactly what the teacher says the student wrote (keep their spelling).',
+'- Now that a word is confirmed as clearly written by the student, if it is misspelled it COUNTS as a spelling/mechanics error in the accuracy criterion (it is no longer your reading-uncertainty). Re-judge accuracy accordingly.',
+'- Re-judge text_form only if a correction changes whether a component is present/well-formed.',
+'- Keep your previous reading of everything else.',
+'- Remove confirmed words from uncertain_words; keep any not addressed.',
+'- Recompute total_score = text_form.score + accuracy.score.',
+'- All output in ENGLISH (except verbatim student words in error_examples).',
+'',
+'Respond ONLY with one valid JSON object in the EXACT same shape as before. No markdown, no preamble, no text outside the JSON.'
+  ].join("\n");
+
   // Boolean attributes that must be ABSENT (not set to "false") when falsy.
   var BOOLEAN_ATTRS = { disabled: true, checked: true, readonly: true, required: true, multiple: true, selected: true };
 
@@ -651,9 +805,9 @@
       return na < nb ? -1 : 1;
     });
 
-    var isAnimals = state.project === "animals";
+    var isC2 = gradingKind() === "c2"; // C2 notes chart uses different columns than C3 articles
 
-    var headers = isAnimals ? [
+    var headers = isC2 ? [
       "Groupe", "Nom", "Date",
       "Niveau C2", "Total (/20)", "Note (%)",
       "Paires action/impact",
@@ -677,7 +831,7 @@
         : "";
       var pct = h.result.total_out_of ? Math.round((h.result.total_score / h.result.total_out_of) * 100) : "";
       var integrity = h.result.integrity_flag && h.result.integrity_flag.flagged ? ("Oui — " + h.result.integrity_flag.reason) : "";
-      if (isAnimals) {
+      if (isC2) {
         var c2 = h.result.c2 || {};
         return [
           h.groupName || "(sans groupe)",
@@ -723,8 +877,8 @@
         var avgRow = new Array(colCount).fill("");
         avgRow[1] = "Moyenne du groupe " + currentGroup;
         // total column index differs per project
-        var totalIdx = isAnimals ? 4 : 7;
-        var pctIdx = isAnimals ? 5 : 8;
+        var totalIdx = isC2 ? 4 : 7;
+        var pctIdx = isC2 ? 5 : 8;
         avgRow[totalIdx] = avg + " / 20";
         avgRow[pctIdx] = Math.round((avg / 20) * 100) + "%";
         allRows.push(avgRow);
@@ -750,7 +904,10 @@
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = (isAnimals ? "animals_and_us_notes_" : "the_outsiders_notes_") + new Date().toISOString().slice(0, 10) + ".csv";
+    var csvName = gradingKind() === "c2" ? "animals_notes_C2_"
+      : gradingKind() === "animals_c3" ? "animals_article_C3_"
+      : "the_outsiders_C3_";
+    a.download = csvName + new Date().toISOString().slice(0, 10) + ".csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -802,6 +959,7 @@
   // ==========================================================================
   var state = {
     project: "outsiders", // "outsiders" | "animals"
+    animalsTask: "reading", // "reading" (C2 notes) | "writing" (C3 article) — only used when project === "animals"
     studentName: "",
     groupName: "",
     imageFiles: [], // {base64, mediaType, previewUrl}
@@ -847,11 +1005,12 @@
       state.showInstallBanner ? renderInstallBanner() : null,
       (!state.apiKey ? renderApiWarning() : null),
       renderProjectSwitcher(),
+      state.project === "animals" ? renderAnimalsTaskSwitcher() : null,
       renderTabs(),
       state.view === "history" ? renderHistoryView() : renderGradeView(),
       state.keyModalOpen ? renderApiKeyModal() : null,
       el("p", { style: { textAlign: "center", fontSize: "0.74rem", color: "var(--ink-soft)", marginTop: "28px" } },
-        [state.project === "animals"
+        [gradingKind() === "c2"
           ? "Grille officielle « Reinvests Understanding of Texts » — C2, ESL Core, Secondaire 3 · /20"
           : "Grille officielle « Formulation of the message » — C3, ESL Core, Secondaire 3 · /20"])
     ]);
@@ -860,22 +1019,41 @@
 
   var PROJECTS = {
     outsiders: { title: "Stay Gold, Marker", sub: "Correction C3 — The Outsiders, opinion text" },
-    animals: { title: "Animals & Us", sub: "Correction C2 — Animals and Us, tableau de notes (Tâche 3)" }
+    animals: {
+      title: "Animals & Us",
+      sub: function () {
+        return state.animalsTask === "writing"
+          ? "Correction C3 — article final (Tâche 5)"
+          : "Correction C2 — tableau de notes (Tâche 3)";
+      }
+    }
   };
 
   function switchProject(p) {
     if (state.project === p || state.batchRunning) return;
     state.project = p;
-    // reset transient state for a clean switch
+    resetTransientForSwitch();
+    state.history = currentHistory();
+    render();
+  }
+
+  function switchAnimalsTask(t) {
+    if (state.animalsTask === t || state.batchRunning) return;
+    state.animalsTask = t;
+    resetTransientForSwitch();
+    state.history = currentHistory();
+    render();
+  }
+
+  // Clears the in-progress copy/batch/form when switching project or sub-task.
+  function resetTransientForSwitch() {
     state.result = null; state.saved = false; state.currentEntryId = null;
     state.imageFiles = []; state.typedText = ""; state.error = null;
     state.studentName = ""; state.groupName = ""; state.wordCorrections = {};
     state.imageWarning = null; state.gradeMode = "single";
     state.batchQueue = []; state.batchResults = []; state.batchImageFiles = [];
-    state.batchStudentName = ""; state.batchGroupName = "";
+    state.batchStudentName = ""; state.batchGroupName = ""; state.batchProcessingDrop = false;
     state.historyFilter = "__all__"; state.view = "grade";
-    state.history = listSubmissions(p);
-    render();
   }
 
   function renderProjectSwitcher() {
@@ -891,12 +1069,26 @@
     ]);
   }
 
+  function renderAnimalsTaskSwitcher() {
+    return el("div", { class: "subtab-switcher" }, [
+      el("button", {
+        class: "subtab-btn" + (state.animalsTask === "reading" ? " active" : ""),
+        onclick: function () { switchAnimalsTask("reading"); }
+      }, ["📋 Lecture (notes · C2)"]),
+      el("button", {
+        class: "subtab-btn" + (state.animalsTask === "writing" ? " active" : ""),
+        onclick: function () { switchAnimalsTask("writing"); }
+      }, ["✍️ Écriture (article · C3)"])
+    ]);
+  }
+
   function renderHeader() {
     var proj = PROJECTS[state.project] || PROJECTS.outsiders;
+    var subText = (typeof proj.sub === "function") ? proj.sub() : proj.sub;
     return el("div", { class: "header" }, [
       el("div", {}, [
         el("h1", {}, [proj.title]),
-        el("div", { class: "sub" }, [proj.sub])
+        el("div", { class: "sub" }, [subText])
       ]),
       el("button", {
         class: "gear-btn", "aria-label": "Réglages",
@@ -948,7 +1140,7 @@
         var file = e.target.files[0];
         if (!file) return;
         importJSONFile(file).then(function (res) {
-          state.history = listSubmissions(state.project);
+          state.history = currentHistory();
           var msg = res.added + " copie(s) importée(s)";
           if (res.skipped > 0) msg += ", " + res.skipped + " déjà présente(s) ignorée(s)";
           if (res.invalid > 0) msg += ", " + res.invalid + " entrée(s) invalide(s)";
@@ -1051,7 +1243,7 @@
             class: "icon-btn", "aria-label": "Supprimer",
             onclick: function () {
               deleteSubmission(it.id);
-              state.history = listSubmissions(state.project);
+              state.history = currentHistory();
               render();
             }
           }, ["✕"]);
@@ -1759,11 +1951,23 @@
     });
   }
 
+  // Which grading variant is active: "c2" (Animals notes), "animals_c3" (Animals article), or "outsiders_c3".
+  function gradingKind() {
+    if (state.project !== "animals") return "outsiders_c3";
+    return state.animalsTask === "writing" ? "animals_c3" : "c2";
+  }
+
   function currentSystemPrompt() {
-    return state.project === "animals" ? ANIMALS_SYSTEM_PROMPT : SYSTEM_PROMPT;
+    var k = gradingKind();
+    if (k === "c2") return ANIMALS_SYSTEM_PROMPT;
+    if (k === "animals_c3") return ANIMALS_WRITING_SYSTEM_PROMPT;
+    return SYSTEM_PROMPT;
   }
   function currentRecheckPrompt() {
-    return state.project === "animals" ? ANIMALS_RECHECK_PROMPT : RECHECK_PROMPT;
+    var k = gradingKind();
+    if (k === "c2") return ANIMALS_RECHECK_PROMPT;
+    if (k === "animals_c3") return ANIMALS_WRITING_RECHECK_PROMPT;
+    return RECHECK_PROMPT;
   }
 
   function friendlyError(e) {
@@ -1779,9 +1983,15 @@
     imageFiles.forEach(function (img) {
       content.push({ type: "image", source: { type: "base64", media_type: img.mediaType, data: img.base64 } });
     });
-    var instruction = state.project === "animals"
-      ? "Here are photo(s) of one student's handwritten TASK 3 notes chart (Human Action / Impact on Animals), possibly across multiple pages, in order. Transcribe the pairs and grade with the C2 rubric according to the system instructions."
-      : "Here are photo(s) of one student's handwritten final draft (possibly across multiple pages, in order). Transcribe and grade according to the system instructions.";
+    var k = gradingKind();
+    var instruction;
+    if (k === "c2") {
+      instruction = "Here are photo(s) of one student's handwritten TASK 3 notes chart (Human Action / Impact on Animals), possibly across multiple pages, in order. Transcribe the pairs and grade with the C2 rubric according to the system instructions.";
+    } else if (k === "animals_c3") {
+      instruction = "Here are photo(s) of one student's handwritten TASK 5 final article (possibly across multiple pages, in order). Transcribe and grade with the C3 rubric according to the system instructions.";
+    } else {
+      instruction = "Here are photo(s) of one student's handwritten final draft (possibly across multiple pages, in order). Transcribe and grade according to the system instructions.";
+    }
     content.push({ type: "text", text: instruction });
     return content;
   }
@@ -1843,9 +2053,15 @@
         render();
         return;
       }
-      var typedInstruction = state.project === "animals"
-        ? "Here is the student's typed TASK 3 notes chart (Human Action / Impact on Animals pairs). Grade with the C2 rubric according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---"
-        : "Here is the student's typed final draft. Grade according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---";
+      var k = gradingKind();
+      var typedInstruction;
+      if (k === "c2") {
+        typedInstruction = "Here is the student's typed TASK 3 notes chart (Human Action / Impact on Animals pairs). Grade with the C2 rubric according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---";
+      } else if (k === "animals_c3") {
+        typedInstruction = "Here is the student's typed TASK 5 article. Grade with the C3 rubric according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---";
+      } else {
+        typedInstruction = "Here is the student's typed final draft. Grade according to the system instructions.\n\n---\n" + state.typedText.trim() + "\n---";
+      }
       userContent = [{ type: "text", text: typedInstruction }];
     }
 
@@ -1945,7 +2161,7 @@
     function processNext(index) {
       if (index >= queue.length) {
         state.batchRunning = false;
-        state.history = listSubmissions(state.project);
+        state.history = currentHistory();
         render();
         return;
       }
@@ -1964,6 +2180,7 @@
           var entry = {
             id: copy.id,
             project: state.project,
+            task: state.project === "animals" ? state.animalsTask : undefined,
             studentName: resolvedName || "",
             groupName: copy.groupName,
             date: new Date().toISOString(),
@@ -2015,7 +2232,7 @@
     var r = state.result;
 
     // Build the project-specific body (header + criterion sections + comment).
-    var bodySections = (state.project === "animals")
+    var bodySections = (gradingKind() === "c2")
       ? buildAnimalsBody(r)
       : buildOutsidersBody(r);
 
@@ -2023,7 +2240,7 @@
     var uncertainSection = buildUncertainSection(r);
 
     // ---- Shared: transcription ----
-    var transcriptionLabel = (state.project === "animals")
+    var transcriptionLabel = (gradingKind() === "c2")
       ? "Voir la transcription du tableau"
       : "Voir la transcription complète";
     var transcriptionDetails = el("details", { style: { marginTop: "14px" } }, [
@@ -2039,10 +2256,10 @@
       onclick: function () {
         if (state.saved) return;
         var id = state.currentEntryId || (Date.now() + "_" + Math.random().toString(36).slice(2, 8));
-        var entry = { id: id, project: state.project, studentName: state.studentName.trim(), groupName: state.groupName.trim(), date: new Date().toISOString(), result: r };
+        var entry = { id: id, project: state.project, task: (state.project === "animals" ? state.animalsTask : undefined), studentName: state.studentName.trim(), groupName: state.groupName.trim(), date: new Date().toISOString(), result: r };
         saveSubmission(entry);
         state.currentEntryId = id;
-        state.history = listSubmissions(state.project);
+        state.history = currentHistory();
         state.saved = true;
         render();
       }
@@ -2174,9 +2391,18 @@
       el("p", { style: { fontSize: "0.88rem", color: "var(--ink-soft)", margin: "4px 0 0" } }, [r.teacher_note])
     ]) : null;
 
+    // Task 5 article (animals_c3) uses a 5-component checklist; Outsiders uses the default 4.
+    var compMap = (gradingKind() === "animals_c3") ? [
+      ["title", "Titre significatif"],
+      ["introduction", "Introduction qui présente le sujet"],
+      ["positive_paragraph", "Paragraphe — impacts POSITIFS (≥2 ex.)"],
+      ["negative_paragraph", "Paragraphe — impacts NÉGATIFS (≥2 ex.)"],
+      ["conclusion", "Conclusion avec conseil/message"]
+    ] : null;
+
     return [
       headerSection, el("div", { class: "divider" }),
-      renderTextFormSection(r.text_form), el("div", { class: "divider" }),
+      renderTextFormSection(r.text_form, compMap), el("div", { class: "divider" }),
       renderAccuracySection(r.accuracy), el("div", { class: "divider" }),
       commentSection, teacherNote
     ];
@@ -2293,18 +2519,20 @@
     return el("div", { class: "why-box" }, rows);
   }
 
-  function renderTextFormSection(tf) {
+  function renderTextFormSection(tf, compMap) {
     var headerRow = el("div", { style: { display: "flex", alignItems: "baseline", justifyContent: "space-between" } }, [
       el("h3", {}, ["1. Text form"]),
       el("span", { class: "pill", style: { background: scoreColor(tf.score, 5), color: "#FAF6EF" } }, [tf.level + " — " + tf.score + "/5"])
     ]);
 
-    var compMap = [
-      ["title", "Meaningful title"],
-      ["introduction", "Complete & engaging introduction"],
-      ["two_body_paragraphs", "Two well-organized body paragraphs"],
-      ["conclusion", "Conclusion with closure"]
-    ];
+    if (!compMap) {
+      compMap = [
+        ["title", "Meaningful title"],
+        ["introduction", "Complete & engaging introduction"],
+        ["two_body_paragraphs", "Two well-organized body paragraphs"],
+        ["conclusion", "Conclusion with closure"]
+      ];
+    }
     var checklist = el("ul", { class: "checklist" }, compMap.map(function (pair) {
       var key = pair[0], label = pair[1];
       var present = tf.components_present ? tf.components_present[key] : false;
